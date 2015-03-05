@@ -66,7 +66,8 @@ public class SkyboxMesh : MonoBehaviour {
         new Material(mat) { mainTexture = skymat.GetTexture("_RightTex") },
         new Material(mat) { mainTexture = skymat.GetTexture("_UpTex")    },
         new Material(mat) { mainTexture = skymat.GetTexture("_DownTex")  }};
-    render.castShadows = false;
+//    render.castShadows = false;
+	render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
     render.receiveShadows = false;
   }
 
