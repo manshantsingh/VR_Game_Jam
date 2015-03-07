@@ -24,9 +24,7 @@ public class Player : MonoBehaviour {
 
 	void FixedUpdate () {
 
-		//Vector3 headRotation = this.transform.FindChild ("Head").rotation.eulerAngles; // use rotation for speed
-
-		// move the rigidbody in the direction of the camera
+		// move the rigidbody forward
 		rigidBody.MovePosition(transform.position + transform.forward * speed);
 
         currentRotationState = head.transform.eulerAngles.y;

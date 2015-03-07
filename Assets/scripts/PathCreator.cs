@@ -4,10 +4,6 @@ using System.Collections.Generic;
 
 public class PathCreator : MonoBehaviour {
 
-	Vector3 curPathPos = Vector3.zero;
-
-	const float BOARD_LENGTH = 13f;
-
 	string[] pathNames = new string[] {"Straight", "Left", "Right"};
 
 	List<GameObject> instantiatedObjects = new List<GameObject>(); // keeps track of all our path obejcts
@@ -33,5 +29,8 @@ public class PathCreator : MonoBehaviour {
 	}
 
 	void Update () {
+
+		// add more path here
+
 	}
 }
