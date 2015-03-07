@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
     public GameObject head,text;
 
     TextMesh theText;
-    float lastRotationState;
+    float lastRotationState, currentRotationState;
     Quaternion goalDirection;
 	
 	void Start () {
@@ -27,10 +27,9 @@ public class Player : MonoBehaviour {
 		//Vector3 headRotation = this.transform.FindChild ("Head").rotation.eulerAngles; // use rotation for speed
 
 		// move the rigidbody in the direction of the camera
-		rigidBody.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+		rigidBody.MovePosition(transform.position + transform.forward * speed);
 
-        float currentRotationState = head.transform.eulerAngles.y;
-
+        currentRotationState = head.transform.eulerAngles.y;
 
         if (Mathf.Abs(currentRotationState - lastRotationState) > 180f)
         {
@@ -38,15 +37,9 @@ public class Player : MonoBehaviour {
             else lastRotationState -= 360f;
         }
 
-        //if (Mathf.Abs(currentRotationState - lastRotationState) > directionOffset && enableChange)
-        if (Mathf.Abs(currentRotationState - lastRotationState) > directionOffset)
-        {
-            goalDirection *= currentRotationState > lastRotationState ? Quaternion.Euler(0, 90, 0) : Quaternion.Euler(0, -90, 0);
-            print(lastRotationState + " vs " + currentRotationState);
-            theText.fontSize = 200;
-            //enableChange = false;
-        }
-        else if (theText.fontSize > 1) theText.fontSize--;
+        //print("current: " + currentRotationState + " vs last: " + lastRotationState);
+        
+        theText.fontSize--;
 
         transform.rotation = Quaternion.Slerp(transform.rotation, goalDirection, rotationSpeed);
         //transform.rotation = goalDirection;
@@ -55,9 +48,24 @@ public class Player : MonoBehaviour {
         lastRotationState = head.transform.eulerAngles.y;
 	}
 
-    //bool enableChange = true;
-    //void Update()
-    //{
-    //    if (Cardboard.SDK.CardboardTriggered||Input.GetKeyDown(KeyCode.A)) enableChange = true;
-    //}
+    void OnTriggerStay(Collider other)
+    {
+        //print("The collider's tag is: " + other.tag+" AND the difference is: "+(currentRotationState-lastRotationState));
+        if (other.tag == "Left" && currentRotationState - lastRotationState < -directionOffset)
+        {
+            goalDirection *= Quaternion.Euler(0, -90, 0);
+            other.GetComponent<BoxCollider>().isTrigger = false;
+            theText.fontSize = 200;
+        }
+        else if (other.tag == "Right" && currentRotationState - lastRotationState > directionOffset)
+        {
+            goalDirection *= Quaternion.Euler(0, 90, 0);
+            other.GetComponent<BoxCollider>().isTrigger = false;
+            theText.fontSize = 200;
+        }
+    }
+    void OnTriggerExit(Collider other)
+    {
+        print("out of " + other.tag);
+    }
 }

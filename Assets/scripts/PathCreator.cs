@@ -4,13 +4,14 @@ using System.Collections.Generic;
 
 public class PathCreator : MonoBehaviour {
 
-	private Vector3 curPathPos = Vector3.zero;
+	Vector3 curPathPos = Vector3.zero;
+    Quaternion curDirection = Quaternion.identity;
 
 	const float BOARD_LENGTH = 13f;
 
 	string[] pathNames = new string[] {"Straight", "Left", "Right"};
 
-	private List<GameObject> instantiatedObjects = new List<GameObject>(); // keeps track of all our path obejcts
+	List<GameObject> instantiatedObjects = new List<GameObject>(); // keeps track of all our path obejcts
 
 	void Start () {
 
