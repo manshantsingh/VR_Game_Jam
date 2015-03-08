@@ -13,24 +13,23 @@ public class PathCreator : MonoBehaviour {
 		//add the first one @index: 0
 		instantiatedObjects.Add(Instantiate(Resources.Load("Straight"), Vector3.zero, Quaternion.identity) as GameObject);
 
-		for (int i = 1; i < 10; i++) {
-
-			string name = pathNames[Random.Range(0, pathNames.Length)];
-
-			Transform prevObj = instantiatedObjects[i-1].transform.FindChild("_end").transform;
-
-			GameObject obj = Instantiate(Resources.Load(name),
-			                             prevObj.position,
-			                             prevObj.rotation) as GameObject;
-			instantiatedObjects.Add(obj);
-
-		}
+        for (int i = 1; i < 5; i++) createNext();
 
 	}
 
-	void Update () {
+	public void createNext()
+    {
+        string name = pathNames[Random.Range(0, pathNames.Length)];
 
-		// add more path here
+        Transform prevObj = instantiatedObjects[instantiatedObjects.Count-1].transform.FindChild("_end").transform;
 
-	}
+        GameObject obj = Instantiate(Resources.Load(name),
+                                     prevObj.position,
+                                     prevObj.rotation) as GameObject;
+        instantiatedObjects.Add(obj);
+    }
+    public void destroyOld()
+    {
+        Destroy(instantiatedObjects[instantiatedObjects.Count - 6]);
+    }
 }

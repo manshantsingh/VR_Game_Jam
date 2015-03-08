@@ -9,15 +9,15 @@ public class Player : MonoBehaviour {
 
     public float speed, directionOffset, rotationSpeed;
 
-    public GameObject head,text;
+    public GameObject head;
+    public PathCreator PathCreater_Script;
+    public TextMesh text;
 
-    TextMesh theText;
     float lastRotationState, currentRotationState;
     Quaternion goalDirection;
 	
 	void Start () {
 		rigidBody = this.GetComponent<Rigidbody> ();
-        theText = text.gameObject.GetComponent<TextMesh>();
         lastRotationState = head.transform.eulerAngles.y;
         goalDirection = transform.rotation;
 	}
@@ -26,6 +26,7 @@ public class Player : MonoBehaviour {
 
 		// move the rigidbody forward
 		rigidBody.MovePosition(transform.position + transform.forward * speed);
+        print(transform.forward * speed);
 
         currentRotationState = head.transform.eulerAngles.y;
 
@@ -35,12 +36,9 @@ public class Player : MonoBehaviour {
             else lastRotationState -= 360f;
         }
 
-        //print("current: " + currentRotationState + " vs last: " + lastRotationState);
-        
-        theText.fontSize--;
+        if (text.fontSize > 1) text.fontSize--;
 
         transform.rotation = Quaternion.Slerp(transform.rotation, goalDirection, rotationSpeed);
-        //transform.rotation = goalDirection;
 
         //at the end
         lastRotationState = head.transform.eulerAngles.y;
@@ -48,22 +46,22 @@ public class Player : MonoBehaviour {
 
     void OnTriggerStay(Collider other)
     {
-        //print("The collider's tag is: " + other.tag+" AND the difference is: "+(currentRotationState-lastRotationState));
+        print(other.tag);
         if (other.tag == "Left" && currentRotationState - lastRotationState < -directionOffset)
         {
             goalDirection *= Quaternion.Euler(0, -90, 0);
             other.GetComponent<BoxCollider>().isTrigger = false;
-            theText.fontSize = 200;
+            text.fontSize = 200;
+            PathCreater_Script.createNext();
+            PathCreater_Script.destroyOld();
         }
         else if (other.tag == "Right" && currentRotationState - lastRotationState > directionOffset)
         {
             goalDirection *= Quaternion.Euler(0, 90, 0);
             other.GetComponent<BoxCollider>().isTrigger = false;
-            theText.fontSize = 200;
+            text.fontSize = 200;
+            PathCreater_Script.createNext();
+            PathCreater_Script.destroyOld();
         }
-    }
-    void OnTriggerExit(Collider other)
-    {
-        print("out of " + other.tag);
     }
 }
